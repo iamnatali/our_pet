@@ -11,7 +11,7 @@ public class PetBot {
         gendersString = new HashMap<>();
         gendersString.put(GenderType.male, "джентельмен");
         gendersString.put(GenderType.female,"леди");
-        gendersString.put(GenderType.trans,"трансгенерный лапушка");
+        gendersString.put(GenderType.trans,"трансгендерный лапушка");
     }
 
     void giveName(String str){

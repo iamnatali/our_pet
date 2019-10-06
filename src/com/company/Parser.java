@@ -5,26 +5,26 @@ import java.util.Arrays;
 import java.util.List;
 
 class Parser {
-    private String conversation;
+    private ConversationStates conversation;
     private PetBot pet;
     private final List<String> genders=Arrays.asList("девочка", "мальчик", "трангендер");
 
-    //сделать conversation классом
     //обработать все возможные ошибки пользователя
     //команды в enum
     //повторения return
     //уже сделанные разные клавиатуры(?)
 
-    void ChangeConversation(String newconv){
+    void ChangeConversation(ConversationStates newconv){
         conversation=newconv;
     }
 
-    String GetConversation(){
+    ConversationStates GetConversation(){
         return conversation;
     }
 
     String GetAudio(String rawstr){
-        if (conversation.equals("fullpet") && rawstr.equals("/caress")){
+        if (conversation.equals(ConversationStates.fullpet)
+                && rawstr.equals("/caress")){
             return "http://d.zaix.ru/eWkq.mp3";
         }
         return "";
@@ -40,7 +40,7 @@ class Parser {
 
     Parser(PetBot p){
         pet=p;
-        conversation="notStarted";
+        conversation=ConversationStates.notStarted;
     }
 
     String GetParsedString(String rawstr){
@@ -54,13 +54,13 @@ class Parser {
             return parsedString;
         }
         else{
-            if (rawstr.equals("/rollback") && !conversation.equals("notStarted")){
-                conversation="notStarted";
+            if (rawstr.equals("/rollback") && !conversation.equals(ConversationStates.notStarted)){
+                conversation=ConversationStates.notStarted;
                 return "используйте /start, чтобы завести питомца снова";
             }
         }
         switch (conversation){
-            case "fullpet":{
+            case fullpet:{
                 switch (rawstr){
                     case("/feed"):{
                         return "ням-ням";
@@ -72,28 +72,28 @@ class Parser {
                         return "муррр";
                     }
                     case("/rename"):{
-                        conversation="name";
+                        conversation=ConversationStates.name;
                         parsedString ="Сейчас Вашего питомца зовут"+pet.getName()+". Введите новое имя";
                     }
                 }
             }
-            case "notStarted":{
+            case notStarted:{
                 if (rawstr.equals("/start")){
-                    conversation="genderChoice";
+                    conversation=ConversationStates.genderChoice;
                     parsedString ="Выберите пол вашего питомца";
                     return parsedString;
                 }
                 break;
             }
-            case "genderChoice":{
+            case genderChoice:{
                 pet.chooseGender(rawstr);
                 parsedString ="Как будут звать вашего питомца?";
-                conversation="name";
+                conversation=ConversationStates.name;
                 return parsedString;
             }
-            case "name":{
+            case name:{
                 pet.giveName(rawstr);
-                conversation="fullpet";
+                conversation=ConversationStates.fullpet;
                 parsedString ="Теперь у вас есть питомец-"+pet.learnGender()+"!Его(ее) имя "+pet.getName();
                 return parsedString;
             }

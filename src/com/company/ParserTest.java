@@ -8,13 +8,13 @@ class ParserTest {
     private Parser p=new Parser(pet);
 
     @After
-    public void InitConveration(){
-        p.ChangeConversation("notStarted");
+    public void InitConversation(){
+        p.ChangeConversation(ConversationStates.notStarted);
     }
 
     @org.junit.jupiter.api.Test
     void getAudiowithEverythingRight() {
-        p.ChangeConversation("fullpet");
+        p.ChangeConversation(ConversationStates.fullpet);
         String test=p.GetAudio("/caress");
         Assert.assertEquals(test,"http://d.zaix.ru/eWkq.mp3");
     }

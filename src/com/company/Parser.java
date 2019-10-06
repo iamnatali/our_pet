@@ -1,7 +1,5 @@
 package com.company;
 
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,7 +59,8 @@ class Parser {
             return parsedString;
         }
         else{
-            if (rawstr.equals("/rollback") && !conversation.equals(ConversationStates.notStarted)){
+            if (rawstr.equals("/rollback")
+                    && !conversation.equals(ConversationStates.notStarted)){
                 conversation=ConversationStates.notStarted;
                 return "используйте /start, чтобы завести питомца снова";
             }
@@ -80,7 +79,7 @@ class Parser {
                     }
                     case("/rename"):{
                         conversation=ConversationStates.name;
-                        parsedString ="Сейчас Вашего питомца зовут"+pet.getName()+". Введите новое имя";
+                        parsedString ="Сейчас Вашего питомца зовут "+pet.getName()+". Введите новое имя";
                         return parsedString;
                         //не ошибка
                     }

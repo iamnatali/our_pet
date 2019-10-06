@@ -1,6 +1,5 @@
 package com.company;
 
-import java.util.HashMap;
 
 class PetBot {
     private String name;

@@ -3,7 +3,6 @@ package com.company;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendAudio;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
@@ -25,14 +24,14 @@ public class NewPet extends TelegramLongPollingBot {
         if (update.hasMessage() && update.getMessage().hasText()) {
             String myStr=update.getMessage().getText();
             Long id=update.getMessage().getChatId();
-            String parsedStr=parsedObject.GetParsedString(myStr);
-            String audioStr=parsedObject.GetAudio(myStr);
-            List<String> parsedBut=parsedObject.GetButtonsNames(myStr);
+            String parsedStr=parsedObject.getParsedString(myStr);
+            String audioStr=parsedObject.getAudio(myStr);
+            List<String> parsedBut=parsedObject.getButtonsNames(myStr);
             SendMessage message = new SendMessage()
                     .setChatId(update.getMessage().getChatId())
                     .setText(parsedStr);
 
-            if (parsedBut.size()!=0) {
+            if (!parsedBut.isEmpty()) {
                 setButtons(message, parsedBut);
             }
 

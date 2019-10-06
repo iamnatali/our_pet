@@ -14,15 +14,15 @@ class Parser {
     //повторения return
     //уже сделанные разные клавиатуры(?)
 
-    void ChangeConversation(ConversationStates newconv){
+    void changeConversation(ConversationStates newconv){
         conversation=newconv;
     }
 
-    ConversationStates GetConversation(){
+    ConversationStates getConversation(){
         return conversation;
     }
 
-    String GetAudio(String rawstr){
+    String getAudio(String rawstr){
         if (conversation.equals(ConversationStates.fullpet)
                 && rawstr.equals("/caress")){
             return "http://d.zaix.ru/eWkq.mp3";
@@ -30,7 +30,7 @@ class Parser {
         return "";
     }
 
-    List<String> GetButtonsNames(String rawstr){
+    List<String> getButtonsNames(String rawstr){
         List<String> buttonsNames=new ArrayList<>();
         if (rawstr.equals("/start")){
             buttonsNames=genders;
@@ -43,7 +43,7 @@ class Parser {
         conversation=ConversationStates.notStarted;
     }
 
-    String GetParsedString(String rawstr){
+    String getParsedString(String rawstr){
         String parsedString = "Не могу вас понять";
         if (rawstr.equals("/help")){
             parsedString = "Добро пожаловать в чат общения с вашим питоцем./n" +
@@ -74,6 +74,11 @@ class Parser {
                     case("/rename"):{
                         conversation=ConversationStates.name;
                         parsedString ="Сейчас Вашего питомца зовут"+pet.getName()+". Введите новое имя";
+                        //не ошибка
+                    }
+                    default:{
+                        System.out.println("somethingstrange");
+                        //нада exception
                     }
                 }
             }
@@ -96,6 +101,10 @@ class Parser {
                 conversation=ConversationStates.fullpet;
                 parsedString ="Теперь у вас есть питомец-"+pet.learnGender()+"!Его(ее) имя "+pet.getName();
                 return parsedString;
+            }
+            default:{
+                System.out.println("somethingstrange");
+                //нада exception
             }
         }
         return parsedString;

@@ -8,21 +8,21 @@ class ParserTest {
     private Parser p=new Parser(pet);
 
     @After
-    public void InitConversation(){
-        p.ChangeConversation(ConversationStates.notStarted);
+    public void initConversation(){
+        p.changeConversation(ConversationStates.notStarted);
     }
 
     @org.junit.jupiter.api.Test
     void getAudiowithEverythingRight() {
-        p.ChangeConversation(ConversationStates.fullpet);
-        String test=p.GetAudio("/caress");
+        p.changeConversation(ConversationStates.fullpet);
+        String test=p.getAudio("/caress");
         Assert.assertEquals(test,"http://d.zaix.ru/eWkq.mp3");
     }
 
     //тесты пачкой
     @org.junit.jupiter.api.Test
     void getAudiowithEverythingWrong() {
-        String test=p.GetAudio("/feed");
+        String test=p.getAudio("/feed");
         Assert.assertEquals(test,"http://d.zaix.ru/eWkq.mp3");
     }
 

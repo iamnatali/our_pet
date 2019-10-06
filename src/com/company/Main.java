@@ -9,10 +9,10 @@ public class Main {
     public static void main(String[] args) {
         ApiContextInitializer.init();
         TelegramBotsApi botsApi = new TelegramBotsApi();
-        PetBot mypet=new PetBot();
-        Parser parser=new Parser(mypet);
+        PetBot myPet=new PetBot();
+        Parser parser=new Parser(myPet);
         try {
-            botsApi.registerBot(new NewPet(parser));
+            botsApi.registerBot(new CommunicationPet(parser));
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }

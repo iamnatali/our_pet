@@ -12,9 +12,9 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewPet extends TelegramLongPollingBot {
+public class CommunicationPet extends TelegramLongPollingBot {
     private Parser parsedObject;
-    NewPet(Parser p){
+    CommunicationPet(Parser p){
         parsedObject=p;
     }
 

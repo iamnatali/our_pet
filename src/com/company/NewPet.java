@@ -1,6 +1,7 @@
 package com.company;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendAudio;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -13,23 +14,48 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NewPet extends TelegramLongPollingBot {
+    private Parser parsedObject;
+    NewPet(Parser p){
+        parsedObject=p;
+    }
+
     @Override
     public void onUpdateReceived(Update update) {
+
         if (update.hasMessage() && update.getMessage().hasText()) {
             String myStr=update.getMessage().getText();
-            Parser parsedObject=new Parser(myStr);
-            SendMessage message = new SendMessage() // Create a SendMessage object with mandatory fields
+            Long id=update.getMessage().getChatId();
+            String parsedStr=parsedObject.GetParsedString(myStr);
+            String audioStr=parsedObject.GetAudio(myStr);
+            List<String> parsedBut=parsedObject.GetButtonsNames(myStr);
+            SendMessage message = new SendMessage()
                     .setChatId(update.getMessage().getChatId())
-                    .setText(parsedObject.GetParsedString());
-            if (parsedObject.GetButtonsNames().size()!=0) {
-                setButtons(message, parsedObject.GetButtonsNames());
+                    .setText(parsedStr);
+
+            if (parsedBut.size()!=0) {
+                setButtons(message, parsedBut);
+            }
+
+            if (!audioStr.equals("none")){
+                SendAudio audio=new SendAudio();
+                audio.setAudio(audioStr);
+                audio.setTitle("мурррррр");
+                audio.setChatId(id);
+                audio.setCaption("муррр");
+                try {
+                    execute(audio);
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+                }
             }
 
             try {
-                execute(message); // Call method to send the message
+                execute(message);
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
+
+
         }
     }
 
@@ -43,37 +69,22 @@ public class NewPet extends TelegramLongPollingBot {
         return "986058725:AAE6GtNxPBS5pulq8oMgMuHCU_XUcUQz_EM";
     }
 
-    public synchronized void setButtons(SendMessage sendMessage, List<String> bnames)
+    private synchronized void setButtons(SendMessage sendMessage, List<String> bnames)
     {
-        // Создаем клавиуатуру
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
         replyKeyboardMarkup.setSelective(true);
         replyKeyboardMarkup.setResizeKeyboard(true);
-        replyKeyboardMarkup.setOneTimeKeyboard(false);
+        replyKeyboardMarkup.setOneTimeKeyboard(true);
 
-        // Создаем список строк клавиатуры
         List<KeyboardRow> keyboard = new ArrayList<>();
 
-        // Первая строчка клавиатуры
-        KeyboardRow keyboardFirstRow = new KeyboardRow();
-        // Добавляем кнопки в первую строчку клавиатуры
-        keyboardFirstRow.add(new KeyboardButton(bnames.get(0)));
+        for (String name:bnames) {
+            KeyboardRow keyboardRow = new KeyboardRow();
+            keyboardRow.add(new KeyboardButton(name));
+            keyboard.add(keyboardRow);
+        }
 
-        // Вторая строчка клавиатуры
-        KeyboardRow keyboardSecondRow = new KeyboardRow();
-        // Добавляем кнопки во вторую строчку клавиатуры
-        keyboardSecondRow.add(new KeyboardButton(bnames.get(1)));
-
-        KeyboardRow keyboardThirdRow = new KeyboardRow();
-        // Добавляем кнопки во вторую строчку клавиатуры
-        keyboardThirdRow.add(new KeyboardButton(bnames.get(1)));
-
-        // Добавляем все строчки клавиатуры в список
-        keyboard.add(keyboardFirstRow);
-        keyboard.add(keyboardSecondRow);
-        keyboard.add(keyboardThirdRow);
-        // и устанваливаем этот список нашей клавиатуре
         replyKeyboardMarkup.setKeyboard(keyboard);
     }
 }

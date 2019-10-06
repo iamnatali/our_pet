@@ -10,16 +10,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
-
-
 
 public class NewPet extends TelegramLongPollingBot {
     private Parser parsedObject;
@@ -27,59 +19,12 @@ public class NewPet extends TelegramLongPollingBot {
         parsedObject=p;
     }
 
-
-
     @Override
     public void onUpdateReceived(Update update) {
 
         if (update.hasMessage() && update.getMessage().hasText()) {
-            PetBot anotherPet=parsedObject.pet;
-            String dbpath=new File("userInfo.db").getAbsolutePath();
-            Connection connection = null;
-            ResultSet resultSet = null;
-            Statement statement = null;
-            Long id=update.getMessage().getChatId();
-            try
-            {
-                Class.forName("org.sqlite.JDBC");
-                connection = DriverManager.getConnection("jdbc:sqlite:"+dbpath);
-                statement = connection.createStatement();
-                resultSet = statement.executeQuery("SELECT * FROM users WHERE id="+id);
-                boolean empty = true;
-                while( resultSet.next() ) {
-                    // ResultSet processing here
-                    empty = false;
-                }
-                if( empty ) {
-                    // Empty result set
-                }
-                /*while (resultSet.next())
-                {
-                    System.out.println(resultSet.getInt("id"));
-                    System.out.println(resultSet.getString("name"));
-                }*/
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-            finally
-            {
-                try
-                {
-                    //wtf
-                    assert resultSet != null;
-                    resultSet.close();
-                    statement.close();
-                    connection.close();
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-
             String myStr=update.getMessage().getText();
+            Long id=update.getMessage().getChatId();
             String parsedStr=parsedObject.GetParsedString(myStr);
             String audioStr=parsedObject.GetAudio(myStr);
             List<String> parsedBut=parsedObject.GetButtonsNames(myStr);

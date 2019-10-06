@@ -36,7 +36,7 @@ public class NewPet extends TelegramLongPollingBot {
                 setButtons(message, parsedBut);
             }
 
-            if (!audioStr.equals("none")){
+            if (!audioStr.equals("")){
                 SendAudio audio=new SendAudio();
                 audio.setAudio(audioStr);
                 audio.setTitle("мурррррр");

@@ -5,39 +5,42 @@ import java.util.Arrays;
 import java.util.List;
 
 class Parser {
-    //private List<String> buttonsNames;
     private String conversation;
     private PetBot pet;
     private final List<String> genders=Arrays.asList("девочка", "мальчик", "трангендер");
 
     //сделать conversation классом
-    //if (conversation.equals("name")) можно сделать выбор животного/породы
     //обработать все возможные ошибки пользователя
     //команды в enum
     //повторения return
     //уже сделанные разные клавиатуры(?)
-    //создать объект парсера из строки и кнопок и хайда
+
+    void ChangeConversation(String newconv){
+        conversation=newconv;
+    }
+
+    String GetConversation(){
+        return conversation;
+    }
 
     String GetAudio(String rawstr){
         if (conversation.equals("fullpet") && rawstr.equals("/caress")){
             return "http://d.zaix.ru/eWkq.mp3";
         }
-        return "none";
+        return "";
     }
 
     List<String> GetButtonsNames(String rawstr){
         List<String> buttonsNames=new ArrayList<>();
         if (rawstr.equals("/start")){
             buttonsNames=genders;
-        }//else if (conversation.equals("name"))
-        //выставить флаг хайд
+        }
         return buttonsNames;
     }
 
     Parser(PetBot p){
         pet=p;
         conversation="notStarted";
-        //buttonsNames=new ArrayList<>(){};
     }
 
     String GetParsedString(String rawstr){
@@ -60,21 +63,17 @@ class Parser {
             case "fullpet":{
                 switch (rawstr){
                     case("/feed"):{
-                        parsedString ="ням-ням";
-                        return parsedString;
+                        return "ням-ням";
                     }
                     case("/admire"):{
-                        parsedString ="Ваш питомец-"+pet.learnGender()+"!Его(ее) имя "+pet.getName();
-                        return parsedString;
+                        return "Ваш питомец-"+pet.learnGender()+"!Его(ее) имя "+pet.getName();
                     }
                     case("/caress"):{
-                        parsedString ="муррр";
-                        return parsedString;
+                        return "муррр";
                     }
                     case("/rename"):{
                         conversation="name";
                         parsedString ="Сейчас Вашего питомца зовут"+pet.getName()+". Введите новое имя";
-                        //return parsedString;
                     }
                 }
             }

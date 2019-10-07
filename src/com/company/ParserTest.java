@@ -1,5 +1,6 @@
 package com.company;
 
+
 import org.junit.After;
 import org.junit.Assert;
 
@@ -7,8 +8,13 @@ import java.util.Arrays;
 import java.util.List;
 
 class ParserTest {
+    private StringConst strConst;
     private PetBot pet=new PetBot();
     private Parser p=new Parser(pet);
+
+    ParserTest(){
+        strConst=new StringConst();
+    }
 
     @After
     public void initConversation(){
@@ -45,7 +51,7 @@ class ParserTest {
     void getParsedStringRollbackCheck() {
         p.changeConversation(ConversationStates.fullpet);
         String test=p.getParsedString("/rollback");
-        Assert.assertEquals(test,"используйте /start, чтобы завести питомца снова");
+        Assert.assertEquals(test, strConst.rollback);
     }
 
     @org.junit.jupiter.api.Test
@@ -80,15 +86,13 @@ class ParserTest {
     void getParsedStringNotStartedRight() {
         p.changeConversation(ConversationStates.notStarted);
         String test=p.getParsedString("/start");
-        Assert.assertEquals(test,"Выберите пол вашего питомца");
+        Assert.assertEquals(test,strConst.genderChoice);
     }
 
     @org.junit.jupiter.api.Test
     void getParsedStringNotStartedWrong() {
         String newLine = System.getProperty("line.separator");
-        String defaultString="Не могу вас понять("+newLine+
-                "Возможно вы используете команды до полноценного создания питомца"+newLine+
-                "начните с команды /start";
+        String defaultString=strConst.defaultstring;
         p.changeConversation(ConversationStates.notStarted);
         String test=p.getParsedString("/feed");
         Assert.assertEquals(test, defaultString);
@@ -98,7 +102,7 @@ class ParserTest {
     void getParsedStringGenderChoice() {
         p.changeConversation(ConversationStates.genderChoice);
         String test=p.getParsedString("мальчик");
-        Assert.assertEquals(test,"Как будут звать вашего питомца?");
+        Assert.assertEquals(test,strConst.nameChoice);
     }
 
     @org.junit.jupiter.api.Test

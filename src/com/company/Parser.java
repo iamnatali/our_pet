@@ -45,24 +45,18 @@ class Parser {
     }
 
     String getParsedString(String rawstr){
-        String newLine = System.getProperty("line.separator");
-        String defaultString="Не могу вас понять("+newLine+
-                "Возможно вы используете команды до полноценного создания питомца"+newLine+
-                "начните с команды /start";
+        StringConst strConst=new StringConst();
+        String defaultString=strConst.defaultstring;
         String parsedString = defaultString;
         if (rawstr.equals("/help")){
-            parsedString = "Добро пожаловать в чат общения с вашим питоцем." +newLine+
-                    "Используйте команду /start, чтобы завести питомца" + newLine+
-                    "А затем заботьтесь о нем командами /caress и /feed" + newLine+
-                    "Если вы будете хорошим хозяином, то увидите как он растет и учится новому)" +newLine+
-                    "Не забывайте о нем, ведь без вас он погибнет!";
+            parsedString = strConst.help;
             return parsedString;
         }
         else{
             if (rawstr.equals("/rollback")
                     && !conversation.equals(ConversationStates.notStarted)){
                 conversation=ConversationStates.notStarted;
-                return "используйте /start, чтобы завести питомца снова";
+                return strConst.rollback;
             }
         }
         switch (conversation){
@@ -91,16 +85,14 @@ class Parser {
             case notStarted:{
                 if (rawstr.equals("/start")){
                     conversation=ConversationStates.genderChoice;
-                    parsedString ="Выберите пол вашего питомца";
-                    return parsedString;
+                    return strConst.genderChoice;
                 }
                 break;
             }
             case genderChoice:{
                 pet.chooseGender(rawstr);
-                parsedString ="Как будут звать вашего питомца?";
                 conversation=ConversationStates.name;
-                return parsedString;
+                return strConst.nameChoice;
             }
             case name:{
                 pet.giveName(rawstr);

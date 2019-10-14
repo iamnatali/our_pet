@@ -1,10 +1,15 @@
 package com.company;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public enum Gender {
 
     male("мальчик"),
     female("девочка"),
-    trans ("трансгендерный лапушка");
+    trans ("трансгендер");
 
     public String title;
 
@@ -19,6 +24,14 @@ public enum Gender {
     @Override
     public String toString(){
         return title;
+    }
+
+    public static List<String> getTitles(){
+        List<String> result = new ArrayList<String>();
+        for (Gender gender: Gender.values()) {
+            result.add(gender.toString());
+        }
+        return result;
     }
 
     public static Gender getGender(String str){

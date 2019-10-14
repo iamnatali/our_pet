@@ -8,7 +8,7 @@ import java.util.List;
 class Parser {
     private ConversationStates conversation;
     private PetBot pet;
-    private final List<String> genders=Arrays.asList("девочка", "мальчик", "трансгендер");
+    private final List<String> genders=Gender.getTitles();
 
     //обработать все возможные ошибки пользователя
     //команды в enum
@@ -39,8 +39,8 @@ class Parser {
         return buttonsNames;
     }
 
-    Parser(PetBot p){
-        pet=p;
+    Parser(PetBot petBot){
+        pet=petBot;
         conversation=ConversationStates.notStarted;
     }
 

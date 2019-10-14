@@ -11,15 +11,13 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class CommunicationPet extends TelegramLongPollingBot {
     private String botToken;
     private Parser parsedObject;
-    CommunicationPet(Parser p){
+    CommunicationPet(Parser p, String botToken){
         parsedObject=p;
-        Scanner in = new Scanner(System.in);
-        botToken = in.nextLine();
+        this.botToken = botToken;
     }
 
     @Override

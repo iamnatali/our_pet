@@ -38,13 +38,13 @@ class ParserTest {
     @org.junit.jupiter.api.Test
     void getButtonsNamesEverythingRight() {
         List<String> test=p.getButtonsNames("/start");
-        Assert.assertEquals(test, Arrays.asList("девочка", "мальчик", "трансгендер"));
+        Assert.assertEquals(test, Gender.getTitles());
     }
 
     @org.junit.jupiter.api.Test
     void getButtonsNamesEverythingWrong() {
         List<String> test=p.getButtonsNames("/feed");
-        Assert.assertNotEquals(test, Arrays.asList("девочка", "мальчик", "трансгендер"));
+        Assert.assertNotEquals(test, Gender.getTitles());
     }
 
     @org.junit.jupiter.api.Test

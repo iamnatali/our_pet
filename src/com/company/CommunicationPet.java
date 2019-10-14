@@ -11,11 +11,15 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class CommunicationPet extends TelegramLongPollingBot {
+    private String botToken;
     private Parser parsedObject;
     CommunicationPet(Parser p){
         parsedObject=p;
+        Scanner in = new Scanner(System.in);
+        botToken = in.nextLine();
     }
 
     @Override
@@ -65,7 +69,7 @@ public class CommunicationPet extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "986058725:AAE6GtNxPBS5pulq8oMgMuHCU_XUcUQz_EM";
+        return botToken;
     }
 
     private synchronized void setButtons(SendMessage sendMessage, List<String> bnames)

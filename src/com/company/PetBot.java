@@ -3,7 +3,7 @@ package com.company;
 
 class PetBot {
     private String name;
-    private String genderType;
+    private Gender genderType;
 
     void giveName(String str){
         name=str;
@@ -14,10 +14,10 @@ class PetBot {
     }
 
     void chooseGender(String str) {
-        genderType=str;
+        genderType=Gender.getGender(str);
     }
 
     String learnGender(){
-        return genderType;
+        return genderType.toString();
     }
 }

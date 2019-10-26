@@ -1,7 +1,7 @@
 package com.company;
 
 public class StringConst {
-    private String newLine;
+    public String newLine=System.getProperty("line.separator");;
 
     public final String defaultstring="Не могу вас понять("+newLine+
             "Возможно вы используете продвинутые команды до полноценного создания питомца "+newLine+
@@ -15,8 +15,4 @@ public class StringConst {
     public final String rollback = "используйте /start, чтобы завести питомца снова";
     public final String  genderChoice = "Выберите пол вашего питомца";
     public final String nameChoice = "Как будут звать вашего питомца?";
-
-    public StringConst(){
-        newLine=System.getProperty("line.separator");
-    }
 }

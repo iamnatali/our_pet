@@ -17,34 +17,20 @@ import java.util.List;
 public class CommunicationPet extends TelegramLongPollingBot {
     private String botToken;
     private Parser parsedObject;
-    private PetDB db;
 
-    CommunicationPet(Parser p, String botToken, PetDB dbase){
+    CommunicationPet(Parser p, String botToken){
         parsedObject=p;
         this.botToken = botToken;
-        db=dbase;
     }
 
     @Override
     public void onUpdateReceived(Update update) {
-        //работу с бд в пасер
         if (update.hasMessage() && update.getMessage().hasText()) {
             Long id=update.getMessage().getChatId();
-            try {
-                Pair<PetBot,Boolean>resPair=db.getData(id);
-                if (resPair.getValue()){
-                    parsedObject.pet=resPair.getKey();
-                    parsedObject.changeConversation(ConversationStates.fullpet);
-                }else{
-                    if (parsedObject.getConversation()==ConversationStates.fullpet){
-                        db.setData(id, parsedObject.pet);
-                    }
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
             String myStr=update.getMessage().getText();
-            String parsedStr=parsedObject.getParsedString(myStr);
+            //передаем mystr и id 3 раза(нехорошо, но парсер сделать инцциализирующимися mystr и id не можем)
+            //может 1 метод, вызывающий 3 и возвращающий тройку?
+            String parsedStr=parsedObject.getParsedString(myStr, id);
             String audioStr=parsedObject.getAudio(myStr);
             List<String> parsedBut=parsedObject.getButtonsNames(myStr);
             SendMessage message = new SendMessage()

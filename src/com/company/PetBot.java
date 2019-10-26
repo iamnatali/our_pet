@@ -2,7 +2,7 @@ package com.company;
 
 
 class PetBot {
-    private String name;
+    private String name="";
     private Gender genderType;
 
     void giveName(String str){

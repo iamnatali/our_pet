@@ -5,6 +5,7 @@ import javafx.util.Pair;
 import java.sql.*;
 
 public class PetDB {
+    //возможно стоит внести в константы
     private String database="ipet.db";
     private String table="infopet";
     private String insertString = "INSERT INTO "+
@@ -12,6 +13,7 @@ public class PetDB {
             " VALUES (?, ?, ?)";
     private String getString ="SELECT * FROM "+table+" WHERE id=?";
     private String updateString="UPDATE "+table+" SET name=?, gender=? WHERE id=?";
+    private String deleteString="DELETE FROM "+table+" WHERE id=?";
 
     private Connection getConnection() throws SQLException {
         Connection connection = null;
@@ -24,6 +26,19 @@ public class PetDB {
         return connection;
     }
 
+    int deleteData(Long index) throws SQLException {
+        int a=0;
+        Connection con = this.getConnection();
+        try(PreparedStatement pstmt = con.prepareStatement(deleteString)) {
+            pstmt.setLong(1,index);
+            a=pstmt.executeUpdate();
+        }
+        catch (SQLException e){
+            System.out.println("Database exception: "+e.getMessage());
+        }
+        return a;
+    }
+
     int updateData(Long index, PetBot pet) throws SQLException {
         int a=0;
         Connection con = this.getConnection();
@@ -32,7 +47,6 @@ public class PetDB {
             pstmt.setString(2,pet.learnGender());
             pstmt.setLong(3,index);
             a=pstmt.executeUpdate();
-            System.out.println(a);
         }
         catch (SQLException e){
             System.out.println("Database exception: "+e.getMessage());
@@ -54,7 +68,6 @@ public class PetDB {
                 String gender=rs.getString("gender");
                 pet.giveName(name);
                 pet.chooseGender(gender);
-                System.out.println(name+" "+gender);
             }
         }
         return new Pair<>(pet, flag);
@@ -68,7 +81,6 @@ public class PetDB {
             pstmt.setString(2,pet.getName());
             pstmt.setString(3,pet.learnGender());
             a=pstmt.executeUpdate();
-            System.out.println(a);
         }
         catch (SQLException e){
             System.out.println("Database exception: "+e.getMessage());

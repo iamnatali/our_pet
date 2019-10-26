@@ -1,6 +1,10 @@
 package com.company;
 
 
+import javafx.util.Pair;
+import org.junit.Test;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -9,18 +13,11 @@ class Parser {
     private ConversationStates conversation;
     PetBot pet;
     private final List<String> genders=Gender.getTitles();
-
-    //обработать все возможные ошибки пользователя
-    //команды в enum
-    //повторения return
+    private PetDB db=new PetDB();
     //уже сделанные разные клавиатуры(?)
 
     void changeConversation(ConversationStates newconv){
         conversation=newconv;
-    }
-
-    ConversationStates getConversation(){
-        return conversation;
     }
 
     String getAudio(String rawstr){
@@ -33,7 +30,7 @@ class Parser {
 
     List<String> getButtonsNames(String rawstr){
         List<String> buttonsNames=new ArrayList<>();
-        if (rawstr.equals("/start")){
+        if (rawstr.equals("/start") && conversation.equals(ConversationStates.genderChoice)){
             buttonsNames=genders;
         }
         return buttonsNames;
@@ -44,10 +41,22 @@ class Parser {
         conversation=ConversationStates.notStarted;
     }
 
-    String getParsedString(String rawstr){
+    String getParsedString(String rawstr, Long id){
         StringConst strConst=new StringConst();
         String defaultString=strConst.defaultstring;
         String parsedString = defaultString;
+        try {
+            Pair<PetBot,Boolean> resPair=db.getData(id);
+            if (resPair.getValue()){
+                pet=resPair.getKey();
+                if (conversation!=ConversationStates.name) {
+                    conversation = ConversationStates.fullpet;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         if (rawstr.equals("/help")){
             parsedString = strConst.help;
             return parsedString;
@@ -55,6 +64,13 @@ class Parser {
         else{
             if (rawstr.equals("/rollback")
                     && !conversation.equals(ConversationStates.notStarted)){
+                if (conversation.equals(ConversationStates.fullpet)){
+                    try {
+                        db.deleteData(id);
+                    }catch (SQLException e){
+                        e.printStackTrace();
+                    }
+                }
                 conversation=ConversationStates.notStarted;
                 return strConst.rollback;
             }
@@ -75,7 +91,6 @@ class Parser {
                         conversation=ConversationStates.name;
                         parsedString ="Сейчас Вашего питомца зовут "+pet.getName()+". Введите новое имя";
                         return parsedString;
-                        //не ошибка
                     }
                     default:{
                         return defaultString;
@@ -96,6 +111,17 @@ class Parser {
             }
             case name:{
                 pet.giveName(rawstr);
+                try{
+                    Pair<PetBot,Boolean> resPair=db.getData(id);
+                    if (resPair.getValue()){
+                        db.updateData(id,pet);
+                    }
+                    else{
+                        db.setData(id, pet);
+                    }
+                }catch (SQLException e){
+                    e.printStackTrace();
+                }
                 conversation=ConversationStates.fullpet;
                 parsedString ="Теперь у вас есть питомец-"+pet.learnGender()+"!Его(ее) имя "+pet.getName();
                 return parsedString;

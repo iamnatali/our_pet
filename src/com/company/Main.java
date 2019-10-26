@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        PetDB db=new PetDB();
+        //могу создавать сколько угодно подключений к базе или не стоит?
         ApiContextInitializer.init();
         System.out.println("Введите токен");
         Scanner scaner = new Scanner(System.in);
@@ -19,7 +19,7 @@ public class Main {
         PetBot myPet = new PetBot();
         Parser parser = new Parser(myPet);
         try {
-            botsApi.registerBot(new CommunicationPet(parser, token, db));
+            botsApi.registerBot(new CommunicationPet(parser, token));
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }

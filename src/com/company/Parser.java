@@ -7,7 +7,7 @@ import java.util.List;
 
 class Parser {
     private ConversationStates conversation;
-    private PetBot pet;
+    PetBot pet;
     private final List<String> genders=Gender.getTitles();
 
     //обработать все возможные ошибки пользователя

@@ -4,8 +4,8 @@ public class StringConst {
     private String newLine;
 
     public final String defaultstring="Не могу вас понять("+newLine+
-            "Возможно вы используете команды до полноценного создания питомца"+newLine+
-            "начните с команды /start";
+            "Возможно вы используете продвинутые команды до полноценного создания питомца "+newLine+
+            "или /start вместо /rollback при уже созданном питомце";
 
     public final String help="Добро пожаловать в чат общения с вашим питоцем." +newLine+
             "Используйте команду /start, чтобы завести питомца" + newLine+

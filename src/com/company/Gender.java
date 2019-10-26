@@ -27,7 +27,7 @@ public enum Gender {
     }
 
     public static List<String> getTitles(){
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         for (Gender gender: Gender.values()) {
             result.add(gender.toString());
         }

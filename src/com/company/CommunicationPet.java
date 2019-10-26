@@ -1,5 +1,6 @@
 package com.company;
 
+import javafx.util.Pair;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendAudio;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -9,23 +10,40 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CommunicationPet extends TelegramLongPollingBot {
     private String botToken;
     private Parser parsedObject;
-    CommunicationPet(Parser p, String botToken){
+    private PetDB db;
+
+    CommunicationPet(Parser p, String botToken, PetDB dbase){
         parsedObject=p;
         this.botToken = botToken;
+        db=dbase;
     }
 
     @Override
     public void onUpdateReceived(Update update) {
-
+        //работу с бд в пасер
         if (update.hasMessage() && update.getMessage().hasText()) {
-            String myStr=update.getMessage().getText();
             Long id=update.getMessage().getChatId();
+            try {
+                Pair<PetBot,Boolean>resPair=db.getData(id);
+                if (resPair.getValue()){
+                    parsedObject.pet=resPair.getKey();
+                    parsedObject.changeConversation(ConversationStates.fullpet);
+                }else{
+                    if (parsedObject.getConversation()==ConversationStates.fullpet){
+                        db.setData(id, parsedObject.pet);
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            String myStr=update.getMessage().getText();
             String parsedStr=parsedObject.getParsedString(myStr);
             String audioStr=parsedObject.getAudio(myStr);
             List<String> parsedBut=parsedObject.getButtonsNames(myStr);

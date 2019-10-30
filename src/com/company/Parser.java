@@ -2,11 +2,9 @@ package com.company;
 
 
 import javafx.util.Pair;
-import org.junit.Test;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 class Parser {
@@ -61,35 +59,34 @@ class Parser {
             parsedString = strConst.help;
             return parsedString;
         }
-        else{
-            if (rawstr.equals("/rollback")
-                    && !conversation.equals(ConversationStates.notStarted)){
-                if (conversation.equals(ConversationStates.fullpet)){
-                    try {
-                        db.deleteData(id);
-                    }catch (SQLException e){
-                        e.printStackTrace();
-                    }
+        else if (rawstr.equals("/rollback") && !conversation.equals(ConversationStates.notStarted)){
+            if (conversation.equals(ConversationStates.fullpet)){
+                try {
+                    db.deleteData(id);
+                }catch (SQLException e){
+                    e.printStackTrace();
                 }
-                conversation=ConversationStates.notStarted;
-                return strConst.rollback;
             }
+            conversation=ConversationStates.notStarted;
+            return strConst.rollback;
         }
+
         switch (conversation){
             case fullpet:{
                 switch (rawstr){
                     case("/feed"):{
-                        return "ням-ням";
+                        pet.Feed();
+                        return strConst.feed;
                     }
                     case("/admire"):{
-                        return "Ваш питомец-"+pet.learnGender()+"!Его(ее) имя "+pet.getName();
+                        return strConst.getAdmireString(pet.getName(), pet.learnGender());
                     }
                     case("/caress"):{
                         return "муррр";
                     }
                     case("/rename"):{
                         conversation=ConversationStates.name;
-                        parsedString ="Сейчас Вашего питомца зовут "+pet.getName()+". Введите новое имя";
+                        parsedString=strConst.getRenameString(pet.getName());
                         return parsedString;
                     }
                     default:{
@@ -123,7 +120,7 @@ class Parser {
                     e.printStackTrace();
                 }
                 conversation=ConversationStates.fullpet;
-                parsedString ="Теперь у вас есть питомец-"+pet.learnGender()+"!Его(ее) имя "+pet.getName();
+                parsedString = strConst.getFullPetString(pet.getName(), pet.learnGender());
                 return parsedString;
             }
             default:{

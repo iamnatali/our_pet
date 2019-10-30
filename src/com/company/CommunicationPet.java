@@ -11,56 +11,81 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class CommunicationPet extends TelegramLongPollingBot {
     private String botToken;
     private Parser parsedObject;
+    private Map<Long, Parser> dict;
 
     CommunicationPet(Parser p, String botToken){
         parsedObject=p;
         this.botToken = botToken;
+        dict = new HashMap<Long, Parser>();
+
+        Timer tm = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                for (Long id : dict.keySet()) {
+                    Parser parser = dict.get(id);
+                    if (parser.pet.IsHungry()) {
+                        SendMessage msg = new SendMessage()
+                                .setChatId(id)
+                                .setText("I'm hungry");
+                        try {
+                            execute(msg);
+                        } catch (TelegramApiException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        };
+        tm.schedule(task, 10000, 1000);
+
     }
+
+
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage() && update.getMessage().hasText()) {
-            Long id=update.getMessage().getChatId();
-            String myStr=update.getMessage().getText();
-            //передаем mystr и id 3 раза(нехорошо, но парсер сделать инцциализирующимися mystr и id не можем)
-            //может 1 метод, вызывающий 3 и возвращающий тройку?
-            String parsedStr=parsedObject.getParsedString(myStr, id);
-            String audioStr=parsedObject.getAudio(myStr);
-            List<String> parsedBut=parsedObject.getButtonsNames(myStr);
-            SendMessage message = new SendMessage()
-                    .setChatId(update.getMessage().getChatId())
-                    .setText(parsedStr);
+        if (! (update.hasMessage() && update.getMessage().hasText()))
+            return;
 
-            if (!parsedBut.isEmpty()) {
-                setButtons(message, parsedBut);
-            }
+        Long id=update.getMessage().getChatId();
+        dict.put(id, parsedObject);
+        String myStr=update.getMessage().getText();
+        //передаем mystr и id 3 раза(нехорошо, но парсер сделать инцциализирующимися mystr и id не можем)
+        //может 1 метод, вызывающий 3 и возвращающий тройку?
+        String parsedStr=parsedObject.getParsedString(myStr, id);
+        String audioStr=parsedObject.getAudio(myStr);
+        List<String> parsedBut=parsedObject.getButtonsNames(myStr);
+        SendMessage message = new SendMessage()
+                .setChatId(update.getMessage().getChatId())
+                .setText(parsedStr);
 
-            if (!audioStr.equals("")){
-                SendAudio audio=new SendAudio();
-                audio.setAudio(audioStr);
-                audio.setTitle("мурррррр");
-                audio.setChatId(id);
-                audio.setCaption("муррр");
-                try {
-                    execute(audio);
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
-                }
-            }
+        if (!parsedBut.isEmpty()) {
+            setButtons(message, parsedBut);
+        }
 
+        if (!audioStr.equals("")){
+            SendAudio audio=new SendAudio();
+            audio.setAudio(audioStr);
+            audio.setTitle("мурррррр");
+            audio.setChatId(id);
+            audio.setCaption("муррр");
             try {
-                execute(message);
+                execute(audio);
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
+        }
 
-
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
         }
     }
 

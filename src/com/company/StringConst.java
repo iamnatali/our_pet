@@ -15,4 +15,17 @@ public class StringConst {
     public final String rollback = "используйте /start, чтобы завести питомца снова";
     public final String  genderChoice = "Выберите пол вашего питомца";
     public final String nameChoice = "Как будут звать вашего питомца?";
+    public final String feed = "ням-ням";
+
+    public String getFullPetString(String name, String gender){
+        return "Теперь у вас есть питомец-"+gender+"!Его(ее) имя "+name;
+    }
+
+    public String getAdmireString(String name, String gender){
+        return "Ваш питомец-"+gender+"!Его(ее) имя "+name;
+    }
+
+    public String getRenameString(String name){
+        return "Сейчас Вашего питомца зовут "+name+". Введите новое имя";
+    }
 }

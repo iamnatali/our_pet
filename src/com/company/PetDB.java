@@ -1,6 +1,6 @@
 package com.company;
 
-import javafx.util.Pair;
+import java.util.HashMap;
 
 import java.sql.*;
 
@@ -55,7 +55,7 @@ public class PetDB {
     }
 
     //Boolean-найден ли индекс
-    Pair<PetBot, Boolean> getData(Long index) throws SQLException {
+    HashMap<PetBot, Boolean> getData(Long index) throws SQLException {
         PetBot pet=new PetBot();
         boolean flag=false;
         Connection con = this.getConnection();
@@ -70,7 +70,9 @@ public class PetDB {
                 pet.chooseGender(gender);
             }
         }
-        return new Pair<>(pet, flag);
+        HashMap<PetBot, Boolean> result = new HashMap<>();
+        result.put(pet, flag);
+        return result;
     }
 
     public int setData(Long index, PetBot pet) throws SQLException {

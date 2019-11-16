@@ -1,6 +1,5 @@
 package com.company;
 
-import javafx.util.Pair;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendAudio;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -29,7 +28,9 @@ public class CommunicationPet extends TelegramLongPollingBot {
             public void run() {
                 for (Long id : dict.keySet()) {
                     Parser parser = dict.get(id);
-                    if (parser.pet.IsHungry()) {
+                    Calendar date = Calendar.getInstance();
+                    date.setTime(new Date());
+                    if (parser.pet.GetTimeToEat().before(date)) {
                         SendMessage msg = new SendMessage()
                                 .setChatId(id)
                                 .setText("I'm hungry");

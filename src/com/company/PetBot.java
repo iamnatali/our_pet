@@ -1,32 +1,26 @@
 package com.company;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.Date;
+import java.util.Calendar;
 
 class PetBot {
     private String name="";
     private Gender genderType;
-    private Boolean hungry = false;
+    private Calendar timeToEat;
 
-    public Boolean IsHungry(){
-        return hungry;
+    Calendar GetTimeToEat(){
+        return timeToEat;
     }
 
-    public void Feed(){
-        hungry = false;
+    void Feed(){
+            timeToEat.setTime(new Date());
+            timeToEat.add(Calendar.MINUTE, 1);
     }
 
      PetBot(){
-        Timer timer = new Timer();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                hungry = true;
-            }
-        };
-
-        timer.schedule(task, 20000, 20000);
-    }
+            timeToEat = Calendar.getInstance();
+            Feed();
+     }
 
     void giveName(String str){
         name=str;

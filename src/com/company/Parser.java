@@ -1,7 +1,8 @@
 package com.company;
 
 
-import javafx.util.Pair;
+import java.util.HashMap;
+import java.util.Map;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -44,9 +45,17 @@ class Parser {
         String defaultString=strConst.defaultstring;
         String parsedString = defaultString;
         try {
-            Pair<PetBot,Boolean> resPair=db.getData(id);
-            if (resPair.getValue()){
-                pet=resPair.getKey();
+            HashMap<PetBot,Boolean> resMap=db.getData(id);
+            PetBot resKey = null;
+            Boolean resValue = false;
+
+            for ( Map.Entry<PetBot, Boolean> entry : resMap.entrySet()
+                 ) {
+                resKey = entry.getKey();
+                resValue = entry.getValue();
+            }
+            if (resValue){
+                pet=resKey;
                 if (conversation!=ConversationStates.name) {
                     conversation = ConversationStates.fullpet;
                 }
@@ -109,8 +118,12 @@ class Parser {
             case name:{
                 pet.giveName(rawstr);
                 try{
-                    Pair<PetBot,Boolean> resPair=db.getData(id);
-                    if (resPair.getValue()){
+                    HashMap<PetBot,Boolean> resMap=db.getData(id);
+                    Boolean resValue = false;
+                    for (Map.Entry<PetBot, Boolean> entry: resMap.entrySet()){
+                        resValue = entry.getValue();
+                    }
+                    if (resValue){
                         db.updateData(id,pet);
                     }
                     else{

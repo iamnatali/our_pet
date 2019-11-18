@@ -4,7 +4,8 @@ import java.util.HashMap;
 
 import java.sql.*;
 
-public class PetDB {
+
+public class PetDB implements DataStorage {
     //возможно стоит внести в константы
     private String database="ipet.db";
     private String table="infopet";
@@ -15,7 +16,7 @@ public class PetDB {
     private String updateString="UPDATE "+table+" SET name=?, gender=? WHERE id=?";
     private String deleteString="DELETE FROM "+table+" WHERE id=?";
 
-    private Connection getConnection() throws SQLException {
+    private Connection getConnection(){
         Connection connection = null;
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:" + database);
@@ -26,67 +27,67 @@ public class PetDB {
         return connection;
     }
 
-    int deleteData(Long index) throws SQLException {
-        int a=0;
+    @Override
+    public void deleteData(Long index){
         Connection con = this.getConnection();
-        try(PreparedStatement pstmt = con.prepareStatement(deleteString)) {
-            pstmt.setLong(1,index);
-            a=pstmt.executeUpdate();
+        try (PreparedStatement pstmt = con.prepareStatement(deleteString)) {
+            pstmt.setLong(1, index);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Database exception: " + e.getMessage());
         }
-        catch (SQLException e){
-            System.out.println("Database exception: "+e.getMessage());
-        }
-        return a;
     }
 
-    int updateData(Long index, PetBot pet) throws SQLException {
-        int a=0;
+    @Override
+    public void updateData(Long index, PetBot pet){
         Connection con = this.getConnection();
-        try(PreparedStatement pstmt = con.prepareStatement(updateString)) {
-            pstmt.setString(1,pet.getName());
-            pstmt.setString(2,pet.learnGender());
-            pstmt.setLong(3,index);
-            a=pstmt.executeUpdate();
+        try (PreparedStatement pstmt = con.prepareStatement(updateString)) {
+            pstmt.setString(1, pet.getName());
+            pstmt.setString(2, pet.learnGender());
+            pstmt.setLong(3, index);
+            pstmt.executeUpdate();
         }
         catch (SQLException e){
             System.out.println("Database exception: "+e.getMessage());
         }
-        return a;
     }
+
 
     //Boolean-найден ли индекс
-    HashMap<PetBot, Boolean> getData(Long index) throws SQLException {
+    @Override
+    public HashMap<PetBot, Boolean> getData(Long index){
         PetBot pet=new PetBot();
         boolean flag=false;
         Connection con = this.getConnection();
-        try(PreparedStatement pstmt = con.prepareStatement(getString);) {
-            pstmt.setLong(1,index);
+        try (PreparedStatement pstmt = con.prepareStatement(getString);) {
+            pstmt.setLong(1, index);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                flag=true;
-                String name=rs.getString("name");
-                String gender=rs.getString("gender");
+                flag = true;
+                String name = rs.getString("name");
+                String gender = rs.getString("gender");
                 pet.giveName(name);
                 pet.chooseGender(gender);
             }
+        } catch (SQLException e) {
+            System.out.println("Database exception: " + e.getMessage());
         }
         HashMap<PetBot, Boolean> result = new HashMap<>();
         result.put(pet, flag);
         return result;
     }
 
-    public int setData(Long index, PetBot pet) throws SQLException {
-        int a=0;
+    @Override
+    public void setData(Long index, PetBot pet){
         Connection con = this.getConnection();
         try(PreparedStatement pstmt = con.prepareStatement(insertString)) {
             pstmt.setLong(1,index);
             pstmt.setString(2,pet.getName());
             pstmt.setString(3,pet.learnGender());
-            a=pstmt.executeUpdate();
+            pstmt.executeUpdate();
         }
         catch (SQLException e){
             System.out.println("Database exception: "+e.getMessage());
         }
-        return a;
     }
 }

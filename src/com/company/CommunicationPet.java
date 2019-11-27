@@ -55,7 +55,8 @@ public class CommunicationPet extends TelegramLongPollingBot {
             return;
 
         Long id=update.getMessage().getChatId();
-        dict.put(id, parsedObject);
+        if(!dict.containsKey(id))
+            dict.put(id, parsedObject);
         String myStr=update.getMessage().getText();
         //передаем mystr и id 3 раза(нехорошо, но парсер сделать инцциализирующимися mystr и id не можем)
         //может 1 метод, вызывающий 3 и возвращающий тройку?

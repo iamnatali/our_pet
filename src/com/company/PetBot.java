@@ -7,20 +7,31 @@ class PetBot {
     private String name="";
     private Gender genderType;
     private Calendar timeToEat;
+    private final Scale wealth;
+
+    PetBot(){
+        timeToEat = Calendar.getInstance();
+        feed();
+        System.err.println("New PetBot");
+        wealth = new Scale(10, 1000 * 3);
+    }
 
     Calendar GetTimeToEat(){
         return timeToEat;
     }
 
-    void Feed(){
+    public void care(){
+        wealth.UpValue();
+    }
+
+    public int getWealth(){
+        return wealth.GetValue();
+    }
+
+    void feed(){
             timeToEat.setTime(new Date());
             timeToEat.add(Calendar.MINUTE, 1);
     }
-
-     PetBot(){
-            timeToEat = Calendar.getInstance();
-            Feed();
-     }
 
     void giveName(String str){
         name=str;

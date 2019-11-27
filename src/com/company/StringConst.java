@@ -21,8 +21,8 @@ class StringConst {
         return "Теперь у вас есть питомец-"+gender+"!Его(ее) имя "+name;
     }
 
-    String getAdmireString(String name, String gender){
-        return "Ваш питомец-"+gender+"!Его(ее) имя "+name;
+    String getAdmireString(String name, String gender, int wealth){
+        return "Ваш питомец-"+gender+"!Его(ее) имя "+name+" его уровень радости: "+wealth ;
     }
 
     String getRenameString(String name){

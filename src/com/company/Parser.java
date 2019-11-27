@@ -44,24 +44,19 @@ class Parser {
         StringConst strConst=new StringConst();
         String defaultString=strConst.defaultstring;
         String parsedString = defaultString;
-        try {
-            HashMap<PetBot,Boolean> resMap=db.getData(id);
-            PetBot resKey = null;
-            Boolean resValue = false;
+        HashMap<PetBot,Boolean> resMap=db.getData(id);
+        PetBot resKey = null;
+        Boolean resValue = false;
 
-            for ( Map.Entry<PetBot, Boolean> entry : resMap.entrySet()
-                 ) {
+        for ( Map.Entry<PetBot, Boolean> entry : resMap.entrySet()) {
                 resKey = entry.getKey();
                 resValue = entry.getValue();
+        }
+        if (resValue){
+            pet=resKey;
+            if (conversation!=ConversationStates.name) {
+                conversation = ConversationStates.fullpet;
             }
-            if (resValue){
-                pet=resKey;
-                if (conversation!=ConversationStates.name) {
-                    conversation = ConversationStates.fullpet;
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
 
         if (rawstr.equals("/help")){
@@ -70,11 +65,7 @@ class Parser {
         }
         else if (rawstr.equals("/rollback") && !conversation.equals(ConversationStates.notStarted)){
             if (conversation.equals(ConversationStates.fullpet)){
-                try {
-                    db.deleteData(id);
-                }catch (SQLException e){
-                    e.printStackTrace();
-                }
+                db.deleteData(id);
             }
             conversation=ConversationStates.notStarted;
             return strConst.rollback;
@@ -84,13 +75,14 @@ class Parser {
             case fullpet:{
                 switch (rawstr){
                     case("/feed"):{
-                        pet.Feed();
+                        pet.feed();
                         return strConst.feed;
                     }
                     case("/admire"):{
-                        return strConst.getAdmireString(pet.getName(), pet.learnGender());
+                        return strConst.getAdmireString(pet.getName(), pet.learnGender(), pet.getWealth());
                     }
                     case("/caress"):{
+                        pet.care();
                         return "муррр";
                     }
                     case("/rename"):{
@@ -117,20 +109,14 @@ class Parser {
             }
             case name:{
                 pet.giveName(rawstr);
-                try{
-                    HashMap<PetBot,Boolean> resMap=db.getData(id);
-                    Boolean resValue = false;
-                    for (Map.Entry<PetBot, Boolean> entry: resMap.entrySet()){
-                        resValue = entry.getValue();
-                    }
-                    if (resValue){
-                        db.updateData(id,pet);
-                    }
-                    else{
-                        db.setData(id, pet);
-                    }
-                }catch (SQLException e){
-                    e.printStackTrace();
+                for (Map.Entry<PetBot, Boolean> entry: resMap.entrySet()){
+                    resValue = entry.getValue();
+                }
+                if (resValue){
+                    db.updateData(id,pet);
+                }
+                else{
+                    db.setData(id, pet);
                 }
                 conversation=ConversationStates.fullpet;
                 parsedString = strConst.getFullPetString(pet.getName(), pet.learnGender());

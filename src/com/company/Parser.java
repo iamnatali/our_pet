@@ -1,6 +1,7 @@
 package com.company;
 
 
+import javax.validation.constraints.Null;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,19 +44,27 @@ class Parser {
     String getParsedString(String rawstr, Long id){
         StringConst strConst=new StringConst();
         String defaultString=strConst.defaultstring;
+        //вроде енто не оч
         String parsedString = defaultString;
-        HashMap<PetBot,Boolean> resMap=db.getData(id);
-        PetBot resKey = null;
+
+        HashMap<PetBot, Boolean> resMap=new HashMap<>();
         Boolean resValue = false;
 
-        for ( Map.Entry<PetBot, Boolean> entry : resMap.entrySet()) {
+        Boolean checked_DB=false;
+        if (conversation!=ConversationStates.fullpet) {
+            checked_DB=true;
+            resMap = db.getData(id);
+            PetBot resKey = null;
+
+            for (Map.Entry<PetBot, Boolean> entry : resMap.entrySet()) {
                 resKey = entry.getKey();
                 resValue = entry.getValue();
-        }
-        if (resValue){
-            pet=resKey;
-            if (conversation!=ConversationStates.name) {
-                conversation = ConversationStates.fullpet;
+            }
+            if (resValue) {
+                pet = resKey;
+                if (conversation != ConversationStates.name) {
+                    conversation = ConversationStates.fullpet;
+                }
             }
         }
 
@@ -109,14 +118,15 @@ class Parser {
             }
             case name:{
                 pet.giveName(rawstr);
-                for (Map.Entry<PetBot, Boolean> entry: resMap.entrySet()){
-                    resValue = entry.getValue();
-                }
-                if (resValue){
-                    db.updateData(id,pet);
-                }
-                else{
-                    db.setData(id, pet);
+                if (checked_DB) {
+                    for (Map.Entry<PetBot, Boolean> entry : resMap.entrySet()) {
+                        resValue = entry.getValue();
+                    }
+                    if (resValue) {
+                        db.updateData(id, pet);
+                    } else {
+                        db.setData(id, pet);
+                    }
                 }
                 conversation=ConversationStates.fullpet;
                 parsedString = strConst.getFullPetString(pet.getName(), pet.learnGender());

@@ -20,3 +20,7 @@ P
 :
 
 .gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302
+P
+ src/com/company/DataStorage.java,2\d\2d68ec0b7f2e04ee5beb36f473710b1cbd1c8e7a
+J
+src/com/company/Scale.java,2\e\2e7c1bc646596c201ffd7557ceaf9391de8fab40

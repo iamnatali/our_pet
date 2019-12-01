@@ -68,11 +68,8 @@ public class PetDB implements DataStorage {
                 flag = true;
                 String name = rs.getString("name");
                 String gender = rs.getString("gender");
-                Integer health=rs.getInt("health");
                 pet.giveName(name);
                 pet.chooseGender(gender);
-                pet.setWealth(health);
-                System.out.println("DB health"+health);
             }
         } catch (SQLException e) {
             System.out.println("Database exception: " + e.getMessage());
@@ -89,7 +86,6 @@ public class PetDB implements DataStorage {
             pstmt.setLong(1,index);
             pstmt.setString(2,pet.getName());
             pstmt.setString(3,pet.learnGender());
-            pstmt.setInt(4, pet.getWealth());
             pstmt.executeUpdate();
         }
         catch (SQLException e){

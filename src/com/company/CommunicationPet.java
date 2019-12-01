@@ -27,23 +27,28 @@ public class CommunicationPet extends TelegramLongPollingBot {
             public void run() {
                 for (Long id : dict.keySet()) {
                     Parser parser = dict.get(id);
-                    Calendar date = Calendar.getInstance();
-                    date.setTime(new Date());
-                    if (parser.pet.GetTimeToEat().before(date)) {
-                        SendMessage msg = new SendMessage()
-                                .setChatId(id)
-                                .setText("I'm hungry");
+                    SendMessage msg = new SendMessage()
+                            .setChatId(id)
+                            .setText("");
+                    if (parser.pet.getHunger() == 0) {
+                        msg.setText("Я голодный!");
+                    }
+                    if (parser.pet.getWealth() == 0) {
+                        msg.setText("Мне грустно!");
+                    }
+                    if (!msg.getText().equals(""))
+                    {
                         try {
                             execute(msg);
                         } catch (TelegramApiException e) {
                             e.printStackTrace();
                         }
+
                     }
                 }
             }
         };
         tm.schedule(task, 10000, 1000);
-
     }
 
     @Override

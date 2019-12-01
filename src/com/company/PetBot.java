@@ -1,41 +1,33 @@
 package com.company;
 
-import java.util.Date;
-import java.util.Calendar;
-
 class PetBot {
     private String name="";
     private Gender genderType;
-    private Calendar timeToEat;
     private final Scale wealth;
+    private final Scale hunger;
 
     PetBot(){
-        timeToEat = Calendar.getInstance();
-        feed();
-        System.err.println("New PetBot");
-        wealth = new Scale(10, 1000 * 3);
+        wealth = new Scale(10, 1000 * 60);
+        hunger = new Scale(10, 1000 * 60);
     }
 
-    Calendar GetTimeToEat(){
-        return timeToEat;
+    void care(){
+        wealth.upValue();
     }
 
-    public void setWealth(int val){
-        wealth.SetValue(val);
-    }
+    String getStrWealth(){return wealth.getStringScale();}
 
-    public void care(){
-        wealth.UpValue();
-    }
-
-    public int getWealth(){
-        return wealth.GetValue();
+    int getWealth(){
+        return wealth.getValue();
     }
 
     void feed(){
-            timeToEat.setTime(new Date());
-            timeToEat.add(Calendar.MINUTE, 1);
+        hunger.upValue();
     }
+
+    String getStrHunger(){return hunger.getStringScale();}
+
+    int getHunger(){return hunger.getValue();}
 
     void giveName(String str){
         name=str;

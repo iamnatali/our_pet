@@ -88,7 +88,9 @@ class Parser {
                         return strConst.feed;
                     }
                     case("/admire"):{
-                        return strConst.getAdmireString(pet.getName(), pet.learnGender(), pet.getWealth());
+                        return strConst.getAdmireString(pet.getName(), pet.learnGender(),
+                                pet.getWealth(), pet.getStrWealth(),
+                                pet.getHunger(), pet.getStrHunger());
                     }
                     case("/caress"):{
                         pet.care();

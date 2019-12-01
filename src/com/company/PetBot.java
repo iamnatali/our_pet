@@ -20,6 +20,10 @@ class PetBot {
         return timeToEat;
     }
 
+    public void setWealth(int val){
+        wealth.SetValue(val);
+    }
+
     public void care(){
         wealth.UpValue();
     }

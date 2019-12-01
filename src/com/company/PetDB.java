@@ -1,5 +1,7 @@
 package com.company;
 
+import org.apache.logging.log4j.core.appender.rolling.action.IfNot;
+
 import java.util.HashMap;
 
 import java.sql.*;
@@ -11,7 +13,7 @@ public class PetDB implements DataStorage {
     private String table="infopet";
     private String insertString = "INSERT INTO "+
             table+
-            " VALUES (?, ?, ?)";
+            " VALUES (?, ?, ?, ?)";
     private String getString ="SELECT * FROM "+table+" WHERE id=?";
     private String updateString="UPDATE "+table+" SET name=?, gender=? WHERE id=?";
     private String deleteString="DELETE FROM "+table+" WHERE id=?";
@@ -66,8 +68,11 @@ public class PetDB implements DataStorage {
                 flag = true;
                 String name = rs.getString("name");
                 String gender = rs.getString("gender");
+                Integer health=rs.getInt("health");
                 pet.giveName(name);
                 pet.chooseGender(gender);
+                pet.setWealth(health);
+                System.out.println("DB health"+health);
             }
         } catch (SQLException e) {
             System.out.println("Database exception: " + e.getMessage());
@@ -84,6 +89,7 @@ public class PetDB implements DataStorage {
             pstmt.setLong(1,index);
             pstmt.setString(2,pet.getName());
             pstmt.setString(3,pet.learnGender());
+            pstmt.setInt(4, pet.getWealth());
             pstmt.executeUpdate();
         }
         catch (SQLException e){

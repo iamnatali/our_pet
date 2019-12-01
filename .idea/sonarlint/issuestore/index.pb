@@ -17,3 +17,6 @@ J
 src/com/company/PetDB.java,6\9\69086cbdf2d857165f7f0ddcc9d4e601dbe204a6
 P
  src/com/company/StringConst.java,e\6\e66cf55cffab173806e04a2c5da95099b30ce26e
+:
+
+.gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302

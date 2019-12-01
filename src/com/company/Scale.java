@@ -23,6 +23,10 @@ public class Scale {
         t.schedule(task, 0, timeAmount);
     }
 
+    public void SetValue(int val){
+        this.value=val;
+    }
+
     public int GetValue(){
         return value;
     }

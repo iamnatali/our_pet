@@ -1,16 +1,16 @@
 
-Ksquid:S1199T"-Extract this nested code block into a method.(âµœ8üô»à-
 Ksquid:S1199d"-Extract this nested code block into a method.(¬€‡•8™ßÈà-
-Ksquid:S1199Q"-Extract this nested code block into a method.(º›“ª8üô»à-
+Qsquid:S1199"-Extract this nested code block into a method.(Î—­Šşÿÿÿÿ8™ßÈà-
+Psquid:S1199O"-Extract this nested code block into a method.(ïğÅüÿÿÿÿ8ÄŸ¦–Ú-
+psquid:S3776,"RRefactor this method to reduce its Cognitive Complexity from 26 to the 15 allowed.(Û“Æ8»ŒÔÈà-
+Psquid:S1199k"-Extract this nested code block into a method.(Ê¬ûŸúÿÿÿÿ8™ßÈà-
+Psquid:S1199_"-Extract this nested code block into a method.(Î—­Šşÿÿÿÿ8™ßÈà-
+Psquid:S1199p"-Extract this nested code block into a method.(È‚æ•şÿÿÿÿ8™ßÈà-
+Ksquid:S1199T"-Extract this nested code block into a method.(âµœ8üô»à-
 ]squid:UselessImportCheck	"-Remove this unused import 'java.util.Arrays'.(î–˜Éüÿÿÿÿ8üô»à-
 Psquid:S1199Z"-Extract this nested code block into a method.(Ö—íõøÿÿÿÿ8ÄŸ¦–Ú-
-Psquid:S1199O"-Extract this nested code block into a method.(ïğÅüÿÿÿÿ8ÄŸ¦–Ú-
-Psquid:S1199k"-Extract this nested code block into a method.(Ê¬ûŸúÿÿÿÿ8™ßÈà-
-Gsquid:S54112"*Use the primitive boolean expression here.(êùÃi8à¾öÇà-
-Psquid:S1199_"-Extract this nested code block into a method.(Î—­Šşÿÿÿÿ8™ßÈà-
-Qsquid:S1199"-Extract this nested code block into a method.(Î—­Šşÿÿÿÿ8™ßÈà-
-Psquid:S1199p"-Extract this nested code block into a method.(È‚æ•şÿÿÿÿ8™ßÈà-
 Psquid:S1199W"-Extract this nested code block into a method.(••Ò¨ıÿÿÿÿ8ÄŸ¦–Ú-
-Gsquid:S5411t"*Use the primitive boolean expression here.(êùÃi8êÃßËà-
-psquid:S3776,"RRefactor this method to reduce its Cognitive Complexity from 26 to the 15 allowed.(Û“Æ8»ŒÔÈà-
 [squid:UselessImportCheck"+Remove this unused import 'org.junit.Test'.(ùøèøÿÿÿÿ8­öøÈà-
+Ksquid:S1199Q"-Extract this nested code block into a method.(º›“ª8üô»à-
+Gsquid:S5411t"*Use the primitive boolean expression here.(êùÃi8êÃßËà-
+Gsquid:S54112"*Use the primitive boolean expression here.(êùÃi8à¾öÇà-

@@ -21,7 +21,6 @@ public class CommunicationPet extends TelegramLongPollingBot {
         parsedObject=p;
         this.botToken = botToken;
         dict = new HashMap<Long, Parser>();
-
         Timer tm = new Timer();
         TimerTask task = new TimerTask() {
             @Override
@@ -47,13 +46,10 @@ public class CommunicationPet extends TelegramLongPollingBot {
 
     }
 
-
-
     @Override
     public void onUpdateReceived(Update update) {
         if (! (update.hasMessage() && update.getMessage().hasText()))
             return;
-
         Long id=update.getMessage().getChatId();
         if(!dict.containsKey(id))
             dict.put(id, parsedObject);
@@ -66,7 +62,6 @@ public class CommunicationPet extends TelegramLongPollingBot {
         SendMessage message = new SendMessage()
                 .setChatId(update.getMessage().getChatId())
                 .setText(parsedStr);
-
         if (!parsedBut.isEmpty()) {
             setButtons(message, parsedBut);
         }
@@ -83,7 +78,6 @@ public class CommunicationPet extends TelegramLongPollingBot {
                 e.printStackTrace();
             }
         }
-
         try {
             execute(message);
         } catch (TelegramApiException e) {

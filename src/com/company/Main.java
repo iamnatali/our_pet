@@ -12,10 +12,13 @@ public class Main {
         //могу создавать сколько угодно подключений к базе или не стоит?
         ApiContextInitializer.init();
         System.out.println("Введите токен");
-        Scanner scaner = new Scanner(System.in);
-        String token = scaner.nextLine();
+        Scanner scanner = new Scanner(System.in);
+        String token = scanner.nextLine();
         TelegramBotsApi botsApi = new TelegramBotsApi();
         PetBot myPet = new PetBot();
+        RunTimer timer = new RunTimer();
+        timer.run(myPet.getHunger(), 1000*60);
+        timer.run(myPet.getWealth(), 1000*60);
         Parser parser = new Parser(myPet);
         try {
             botsApi.registerBot(new CommunicationPet(parser, token));

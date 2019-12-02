@@ -1,11 +1,9 @@
 package com.company;
 
 
-import javax.validation.constraints.Null;
 import java.util.HashMap;
 import java.util.Map;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +41,7 @@ class Parser {
 
     String getParsedString(String rawstr, Long id){
         StringConst strConst=new StringConst();
-        String defaultString=strConst.defaultstring;
+        String defaultString=strConst.defaultString;
         //вроде енто не оч
         String parsedString = defaultString;
 
@@ -89,8 +87,8 @@ class Parser {
                     }
                     case("/admire"):{
                         return strConst.getAdmireString(pet.getName(), pet.learnGender(),
-                                pet.getWealth(), pet.getStrWealth(),
-                                pet.getHunger(), pet.getStrHunger());
+                                pet.getWealth().getValue(), pet.getWealth().getStringScale(),
+                                pet.getHunger().getValue(), pet.getHunger().getStringScale());
                     }
                     case("/caress"):{
                         pet.care();

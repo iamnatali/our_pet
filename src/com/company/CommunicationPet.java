@@ -30,10 +30,10 @@ public class CommunicationPet extends TelegramLongPollingBot {
                     SendMessage msg = new SendMessage()
                             .setChatId(id)
                             .setText("");
-                    if (parser.pet.getHunger() == 0) {
+                    if (parser.pet.getHunger().getValue() == 0) {
                         msg.setText("Я голодный!");
                     }
-                    if (parser.pet.getWealth() == 0) {
+                    if (parser.pet.getWealth().getValue() == 0) {
                         msg.setText("Мне грустно!");
                     }
                     if (!msg.getText().equals(""))

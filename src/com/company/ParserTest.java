@@ -3,7 +3,6 @@ package com.company;
 import org.junit.After;
 import org.junit.Assert;
 
-import java.util.Arrays;
 import java.util.List;
 
 class ParserTest {
@@ -90,7 +89,7 @@ class ParserTest {
 
     @org.junit.jupiter.api.Test
     void getParsedStringNotStartedWrong() {
-        String defaultString=strConst.defaultstring;
+        String defaultString=strConst.defaultString;
         p.changeConversation(ConversationStates.notStarted);
         String test=p.getParsedString("/feed", (long) 123);
         Assert.assertEquals(test, defaultString);

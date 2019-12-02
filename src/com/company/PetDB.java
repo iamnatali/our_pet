@@ -59,6 +59,9 @@ public class PetDB implements DataStorage {
     @Override
     public HashMap<PetBot, Boolean> getData(Long index){
         PetBot pet=new PetBot();
+        RunTimer tm = new RunTimer();
+        tm.run(pet.getWealth(), 1000 * 60);
+        tm.run(pet.getHunger(), 1000 * 60);
         boolean flag=false;
         Connection con = this.getConnection();
         try (PreparedStatement pstmt = con.prepareStatement(getString);) {

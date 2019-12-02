@@ -7,27 +7,23 @@ class PetBot {
     private final Scale hunger;
 
     PetBot(){
-        wealth = new Scale(10, 1000 * 60);
-        hunger = new Scale(10, 1000 * 60);
+        wealth = new Scale(10);
+        hunger = new Scale(10);
     }
 
     void care(){
         wealth.upValue();
     }
 
-    String getStrWealth(){return wealth.getStringScale();}
-
-    int getWealth(){
-        return wealth.getValue();
+    Scale getWealth(){
+        return wealth;
     }
 
     void feed(){
         hunger.upValue();
     }
 
-    String getStrHunger(){return hunger.getStringScale();}
-
-    int getHunger(){return hunger.getValue();}
+    Scale getHunger(){return hunger;}
 
     void giveName(String str){
         name=str;

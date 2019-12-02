@@ -8,17 +8,9 @@ class Scale {
     private int size;
     private int value;
 
-    Scale(int maxValue, int timeAmount){
+    Scale(int maxValue){
         size = maxValue;
         value = maxValue;
-        Timer t = new Timer();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                DownValue();
-            }
-        };
-        t.schedule(task, 0, timeAmount);
     }
 
     String getStringScale(){
@@ -44,7 +36,7 @@ class Scale {
         }
     }
 
-    private void DownValue(){
+    void DownValue(){
         if (value > 0) {
             value = value - 1;
         }

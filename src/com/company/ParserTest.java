@@ -3,12 +3,16 @@ package com.company;
 import org.junit.After;
 import org.junit.Assert;
 
-import java.util.Arrays;
 import java.util.List;
 
 class ParserTest {
+    private StringConst strConst;
     private PetBot pet=new PetBot();
     private Parser p=new Parser(pet);
+
+    ParserTest(){
+        strConst=new StringConst();
+    }
 
     @After
     public void initConversation(){
@@ -32,79 +36,76 @@ class ParserTest {
     @org.junit.jupiter.api.Test
     void getButtonsNamesEverythingRight() {
         List<String> test=p.getButtonsNames("/start");
-        Assert.assertEquals(test, Arrays.asList("девочка", "мальчик", "трансгендер"));
+        Assert.assertEquals(test, Gender.getTitles());
     }
 
     @org.junit.jupiter.api.Test
     void getButtonsNamesEverythingWrong() {
         List<String> test=p.getButtonsNames("/feed");
-        Assert.assertNotEquals(test, Arrays.asList("девочка", "мальчик", "трансгендер"));
+        Assert.assertNotEquals(test, Gender.getTitles());
     }
 
     @org.junit.jupiter.api.Test
     void getParsedStringRollbackCheck() {
         p.changeConversation(ConversationStates.fullpet);
-        String test=p.getParsedString("/rollback");
-        Assert.assertEquals(test,"используйте /start, чтобы завести питомца снова");
+        String test=p.getParsedString("/rollback", (long) 123);
+        Assert.assertEquals(test, strConst.rollback);
     }
 
     @org.junit.jupiter.api.Test
     void getParsedStringFullpetFeed() {
         p.changeConversation(ConversationStates.fullpet);
-        String test=p.getParsedString("/feed");
+        String test=p.getParsedString("/feed", (long) 123);
         Assert.assertEquals(test,"ням-ням");
     }
 
     @org.junit.jupiter.api.Test
     void getParsedStringFullpetAdmire() {
         p.changeConversation(ConversationStates.fullpet);
-        String test=p.getParsedString("/admire");
+        String test=p.getParsedString("/admire", (long) 123);
         Assert.assertEquals(test, "Ваш питомец-"+pet.learnGender()+"!Его(ее) имя "+pet.getName());
     }
 
     @org.junit.jupiter.api.Test
     void getParsedStringFullpetCaress() {
         p.changeConversation(ConversationStates.fullpet);
-        String test=p.getParsedString("/caress");
+        String test=p.getParsedString("/caress", (long) 123);
         Assert.assertEquals(test,"муррр");
     }
 
     @org.junit.jupiter.api.Test
     void getParsedStringFullpetRename() {
         p.changeConversation(ConversationStates.fullpet);
-        String test=p.getParsedString("/rename");
+        String test=p.getParsedString("/rename", (long) 123);
         Assert.assertEquals(test, "Сейчас Вашего питомца зовут "+pet.getName()+". Введите новое имя");
     }
 
     @org.junit.jupiter.api.Test
     void getParsedStringNotStartedRight() {
         p.changeConversation(ConversationStates.notStarted);
-        String test=p.getParsedString("/start");
-        Assert.assertEquals(test,"Выберите пол вашего питомца");
+        String test=p.getParsedString("/start", (long) 123);
+        Assert.assertEquals(test,strConst.genderChoice);
     }
 
     @org.junit.jupiter.api.Test
     void getParsedStringNotStartedWrong() {
-        String newLine = System.getProperty("line.separator");
-        String defaultString="Не могу вас понять("+newLine+
-                "Возможно вы используете команды до полноценного создания питомца"+newLine+
-                "начните с команды /start";
+        String defaultString=strConst.defaultString;
         p.changeConversation(ConversationStates.notStarted);
-        String test=p.getParsedString("/feed");
+        String test=p.getParsedString("/feed", (long) 123);
         Assert.assertEquals(test, defaultString);
     }
 
     @org.junit.jupiter.api.Test
     void getParsedStringGenderChoice() {
         p.changeConversation(ConversationStates.genderChoice);
-        String test=p.getParsedString("мальчик");
-        Assert.assertEquals(test,"Как будут звать вашего питомца?");
+        String test=p.getParsedString("мальчик", (long) 123);
+        Assert.assertEquals(test,strConst.nameChoice);
     }
 
     @org.junit.jupiter.api.Test
     void getParsedStringName() {
         p.changeConversation(ConversationStates.name);
-        String test=p.getParsedString("суртур");
+        String test=p.getParsedString("суртур", (long) 123);
         Assert.assertEquals(test, "Теперь у вас есть питомец-"
                 +pet.learnGender()+"!Его(ее) имя "+pet.getName());
     }

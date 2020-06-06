@@ -1,26 +1,21 @@
 package com.company;
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 class Parser {
     private ConversationStates conversation;
-    private PetBot pet;
-    private final List<String> genders=Arrays.asList("девочка", "мальчик", "трансгендер");
-
-    //обработать все возможные ошибки пользователя
-    //команды в enum
-    //повторения return
+    PetBot pet;
+    private final List<String> genders=Gender.getTitles();
+    private PetDB db=new PetDB();
     //уже сделанные разные клавиатуры(?)
 
     void changeConversation(ConversationStates newconv){
         conversation=newconv;
-    }
-
-    ConversationStates getConversation(){
-        return conversation;
     }
 
     String getAudio(String rawstr){
@@ -33,55 +28,76 @@ class Parser {
 
     List<String> getButtonsNames(String rawstr){
         List<String> buttonsNames=new ArrayList<>();
-        if (rawstr.equals("/start")){
+        if (rawstr.equals("/start") && conversation.equals(ConversationStates.genderChoice)){
             buttonsNames=genders;
         }
         return buttonsNames;
     }
 
-    Parser(PetBot p){
-        pet=p;
+    Parser(PetBot petBot){
+        pet=petBot;
         conversation=ConversationStates.notStarted;
     }
 
-    String getParsedString(String rawstr){
-        String newLine = System.getProperty("line.separator");
-        String defaultString="Не могу вас понять("+newLine+
-                "Возможно вы используете команды до полноценного создания питомца"+newLine+
-                "начните с команды /start";
+    String getParsedString(String rawstr, Long id){
+        StringConst strConst=new StringConst();
+        String defaultString=strConst.defaultString;
+        //вроде енто не оч
         String parsedString = defaultString;
-        if (rawstr.equals("/help")){
-            parsedString = "Добро пожаловать в чат общения с вашим питоцем." +newLine+
-                    "Используйте команду /start, чтобы завести питомца" + newLine+
-                    "А затем заботьтесь о нем командами /caress и /feed" + newLine+
-                    "Если вы будете хорошим хозяином, то увидите как он растет и учится новому)" +newLine+
-                    "Не забывайте о нем, ведь без вас он погибнет!";
-            return parsedString;
-        }
-        else{
-            if (rawstr.equals("/rollback")
-                    && !conversation.equals(ConversationStates.notStarted)){
-                conversation=ConversationStates.notStarted;
-                return "используйте /start, чтобы завести питомца снова";
+
+        HashMap<PetBot, Boolean> resMap=new HashMap<>();
+        Boolean resValue = false;
+
+        Boolean checked_DB=false;
+        if (conversation!=ConversationStates.fullpet) {
+            checked_DB=true;
+            resMap = db.getData(id);
+            PetBot resKey = null;
+
+            for (Map.Entry<PetBot, Boolean> entry : resMap.entrySet()) {
+                resKey = entry.getKey();
+                resValue = entry.getValue();
+            }
+            if (resValue) {
+                pet = resKey;
+                if (conversation != ConversationStates.name) {
+                    conversation = ConversationStates.fullpet;
+                }
             }
         }
+
+        if (rawstr.equals("/help")){
+            parsedString = strConst.help;
+            return parsedString;
+        }
+        else if (rawstr.equals("/rollback") && !conversation.equals(ConversationStates.notStarted)){
+            if (conversation.equals(ConversationStates.fullpet)){
+                db.deleteData(id);
+            }
+            conversation=ConversationStates.notStarted;
+            return strConst.rollback;
+        }
+
         switch (conversation){
             case fullpet:{
                 switch (rawstr){
                     case("/feed"):{
-                        return "ням-ням";
+                        pet.feed();
+                        return strConst.feed;
                     }
                     case("/admire"):{
-                        return "Ваш питомец-"+pet.learnGender()+"!Его(ее) имя "+pet.getName();
+                        return strConst.getAdmireString(pet.getName(), pet.learnGender(),
+                                pet.getWealth().getValue(), pet.getWealth().getStringScale(),
+                                pet.getHunger().getValue(), pet.getHunger().getStringScale());
                     }
                     case("/caress"):{
+                        pet.care();
                         return "муррр";
                     }
                     case("/rename"):{
                         conversation=ConversationStates.name;
-                        parsedString ="Сейчас Вашего питомца зовут "+pet.getName()+". Введите новое имя";
+                        parsedString=strConst.getRenameString(pet.getName());
                         return parsedString;
-                        //не ошибка
                     }
                     default:{
                         return defaultString;
@@ -91,21 +107,29 @@ class Parser {
             case notStarted:{
                 if (rawstr.equals("/start")){
                     conversation=ConversationStates.genderChoice;
-                    parsedString ="Выберите пол вашего питомца";
-                    return parsedString;
+                    return strConst.genderChoice;
                 }
                 break;
             }
             case genderChoice:{
                 pet.chooseGender(rawstr);
-                parsedString ="Как будут звать вашего питомца?";
                 conversation=ConversationStates.name;
-                return parsedString;
+                return strConst.nameChoice;
             }
             case name:{
                 pet.giveName(rawstr);
+                if (checked_DB) {
+                    for (Map.Entry<PetBot, Boolean> entry : resMap.entrySet()) {
+                        resValue = entry.getValue();
+                    }
+                    if (resValue) {
+                        db.updateData(id, pet);
+                    } else {
+                        db.setData(id, pet);
+                    }
+                }
                 conversation=ConversationStates.fullpet;
-                parsedString ="Теперь у вас есть питомец-"+pet.learnGender()+"!Его(ее) имя "+pet.getName();
+                parsedString = strConst.getFullPetString(pet.getName(), pet.learnGender());
                 return parsedString;
             }
             default:{

@@ -1,0 +1,15 @@
+
+Hsquid:S5411s"*Use the primitive boolean expression here.(ªµÃ„8£§µ‚ì-
+Ksquid:S1199b"-Extract this nested code block into a method.(¬€‡•8™ßÈà-
+Psquid:S1199i"-Extract this nested code block into a method.(Ê¬ûŸúÿÿÿÿ8™ßÈà-
+Psquid:S1199}"-Extract this nested code block into a method.(Î—­Šşÿÿÿÿ8™ßÈà-
+Ksquid:S1199M"-Extract this nested code block into a method.(º›“ª8£§µ‚ì-
+psquid:S3776+"RRefactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.(Û“Æ8»ŒÔÈà-
+Ksquid:S1199Q"-Extract this nested code block into a method.(âµœ8üô»à-
+Psquid:S1199T"-Extract this nested code block into a method.(••Ò¨ıÿÿÿÿ8üô»à-
+Psquid:S1199K"-Extract this nested code block into a method.(ïğÅüÿÿÿÿ8ÄŸ¦–Ú-
+Psquid:S1199X"-Extract this nested code block into a method.(Ö—íõøÿÿÿÿ8ÄŸ¦–Ú-
+Psquid:S1199]"-Extract this nested code block into a method.(Î—­Šşÿÿÿÿ8™ßÈà-
+Hsquid:S54117"*Use the primitive boolean expression here.(ªµÃ„8£§µ‚ì-
+]squid:UselessImportCheck"2Remove this unused import 'java.sql.SQLException'.(ÛïÆŸ8£§µ‚ì-
+Psquid:S1199n"-Extract this nested code block into a method.(È‚æ•şÿÿÿÿ8™ßÈà-

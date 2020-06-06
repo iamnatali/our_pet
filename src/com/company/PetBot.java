@@ -1,9 +1,29 @@
 package com.company;
 
-
 class PetBot {
-    private String name;
-    private String genderType;
+    private String name="";
+    private Gender genderType;
+    private final Scale wealth;
+    private final Scale hunger;
+
+    PetBot(){
+        wealth = new Scale(10);
+        hunger = new Scale(10);
+    }
+
+    void care(){
+        wealth.upValue();
+    }
+
+    Scale getWealth(){
+        return wealth;
+    }
+
+    void feed(){
+        hunger.upValue();
+    }
+
+    Scale getHunger(){return hunger;}
 
     void giveName(String str){
         name=str;
@@ -14,10 +34,10 @@ class PetBot {
     }
 
     void chooseGender(String str) {
-        genderType=str;
+        genderType=Gender.getGender(str);
     }
 
     String learnGender(){
-        return genderType;
+        return genderType.toString();
     }
 }

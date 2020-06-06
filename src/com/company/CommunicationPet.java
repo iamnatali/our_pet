@@ -9,52 +9,84 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.SQLException;
+import java.util.*;
 
 public class CommunicationPet extends TelegramLongPollingBot {
+    private String botToken;
     private Parser parsedObject;
-    CommunicationPet(Parser p){
+    private Map<Long, Parser> dict;
+
+    CommunicationPet(Parser p, String botToken){
         parsedObject=p;
+        this.botToken = botToken;
+        dict = new HashMap<Long, Parser>();
+        Timer tm = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                for (Long id : dict.keySet()) {
+                    Parser parser = dict.get(id);
+                    SendMessage msg = new SendMessage()
+                            .setChatId(id)
+                            .setText("");
+                    if (parser.pet.getHunger().getValue() == 0) {
+                        msg.setText("Я голодный!");
+                    }
+                    if (parser.pet.getWealth().getValue() == 0) {
+                        msg.setText("Мне грустно!");
+                    }
+                    if (!msg.getText().equals(""))
+                    {
+                        try {
+                            execute(msg);
+                        } catch (TelegramApiException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+            }
+        };
+        tm.schedule(task, 10000, 1000);
     }
 
     @Override
     public void onUpdateReceived(Update update) {
+        if (! (update.hasMessage() && update.getMessage().hasText()))
+            return;
+        Long id=update.getMessage().getChatId();
+        if(!dict.containsKey(id))
+            dict.put(id, parsedObject);
+        String myStr=update.getMessage().getText();
+        //передаем mystr и id 3 раза(нехорошо, но парсер сделать инцциализирующимися mystr и id не можем)
+        //может 1 метод, вызывающий 3 и возвращающий тройку?
+        String parsedStr=parsedObject.getParsedString(myStr, id);
+        String audioStr=parsedObject.getAudio(myStr);
+        List<String> parsedBut=parsedObject.getButtonsNames(myStr);
+        SendMessage message = new SendMessage()
+                .setChatId(update.getMessage().getChatId())
+                .setText(parsedStr);
+        if (!parsedBut.isEmpty()) {
+            setButtons(message, parsedBut);
+        }
 
-        if (update.hasMessage() && update.getMessage().hasText()) {
-            String myStr=update.getMessage().getText();
-            Long id=update.getMessage().getChatId();
-            String parsedStr=parsedObject.getParsedString(myStr);
-            String audioStr=parsedObject.getAudio(myStr);
-            List<String> parsedBut=parsedObject.getButtonsNames(myStr);
-            SendMessage message = new SendMessage()
-                    .setChatId(update.getMessage().getChatId())
-                    .setText(parsedStr);
-
-            if (!parsedBut.isEmpty()) {
-                setButtons(message, parsedBut);
-            }
-
-            if (!audioStr.equals("")){
-                SendAudio audio=new SendAudio();
-                audio.setAudio(audioStr);
-                audio.setTitle("мурррррр");
-                audio.setChatId(id);
-                audio.setCaption("муррр");
-                try {
-                    execute(audio);
-                } catch (TelegramApiException e) {
-                    e.printStackTrace();
-                }
-            }
-
+        if (!audioStr.equals("")){
+            SendAudio audio=new SendAudio();
+            audio.setAudio(audioStr);
+            audio.setTitle("мурррррр");
+            audio.setChatId(id);
+            audio.setCaption("муррр");
             try {
-                execute(message);
+                execute(audio);
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
-
-
+        }
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
         }
     }
 
@@ -65,7 +97,7 @@ public class CommunicationPet extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "986058725:AAE6GtNxPBS5pulq8oMgMuHCU_XUcUQz_EM";
+        return botToken;
     }
 
     private synchronized void setButtons(SendMessage sendMessage, List<String> bnames)
